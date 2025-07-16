@@ -1,13 +1,18 @@
 package com.quantumluke.quantumshops.services.product;
 
+import com.quantumluke.quantumshops.dto.ImageDto;
+import com.quantumluke.quantumshops.dto.ProductDto;
 import com.quantumluke.quantumshops.exceptions.ProductNotFoundException;
 import com.quantumluke.quantumshops.models.Category;
+import com.quantumluke.quantumshops.models.Image;
 import com.quantumluke.quantumshops.models.Product;
 import com.quantumluke.quantumshops.repository.CategoryRepository;
+import com.quantumluke.quantumshops.repository.ImageRepository;
 import com.quantumluke.quantumshops.repository.ProductRepository;
 import com.quantumluke.quantumshops.request.AddProductRequest;
 import com.quantumluke.quantumshops.request.UpdateProductRequest;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +23,8 @@ import java.util.Optional;
 public class ProductService implements IProductService{
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ImageRepository imageRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public Product addProduct(AddProductRequest request) {
@@ -112,5 +119,23 @@ public class ProductService implements IProductService{
     @Override
     public Long countProductsByBrandAndName(String brand, String name) {
         return productRepository.countByBrandAndName(brand, name);
+    }
+
+    @Override
+    public List<ProductDto> getConvertedProducts(List<Product> products) {
+        return products.stream()
+                .map(this::convertToDto)
+                .toList();
+    }
+
+    @Override
+    public ProductDto convertToDto(Product product) {
+        ProductDto productDto = modelMapper.map(product, ProductDto.class);
+        List<Image> images = imageRepository.findByProductId(product.getId());
+        List<ImageDto> imageDtos = images.stream()
+                .map(image -> modelMapper.map(image, ImageDto.class))
+                .toList();
+        productDto.setImage(imageDtos);
+        return productDto;
     }
 }

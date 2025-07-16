@@ -1,5 +1,6 @@
 package com.quantumluke.quantumshops.controllers;
 
+import com.quantumluke.quantumshops.dto.ProductDto;
 import com.quantumluke.quantumshops.exceptions.ProductNotFoundException;
 import com.quantumluke.quantumshops.models.Product;
 import com.quantumluke.quantumshops.request.AddProductRequest;
@@ -12,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("${api.prefix}/products")
@@ -21,7 +24,9 @@ public class ProductController {
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllProducts() {
         try {
-            return ResponseEntity.ok(new ApiResponse("Products fetched successfully", productService.getAllProducts()));
+            List<Product> products = productService.getAllProducts();
+            List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
+            return ResponseEntity.ok(new ApiResponse("Products fetched successfully", convertedProducts));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error fetching products: ", e.getMessage()));
         }
@@ -30,7 +35,9 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse> getProductById(@PathVariable Long id) {
         try {
-            return ResponseEntity.ok(new ApiResponse("Product fetched successfully", productService.getProductById(id)));
+            Product product = productService.getProductById(id);
+            ProductDto convertedProduct = productService.convertToDto(product);
+            return ResponseEntity.ok(new ApiResponse("Product fetched successfully", convertedProduct));
         } catch (ProductNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Product not found with id: " + id, e.getMessage()));
         } catch (Exception e) {
@@ -41,7 +48,9 @@ public class ProductController {
     @GetMapping("/category/{category}")
     public ResponseEntity<ApiResponse> getProductsByCategory(@PathVariable String category) {
         try {
-            return ResponseEntity.ok(new ApiResponse("Products fetched successfully", productService.getProductsByCategory(category)));
+            List<Product> products = productService.getProductsByCategory(category);
+            List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
+            return ResponseEntity.ok(new ApiResponse("Products fetched successfully", convertedProducts));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error fetching products by category: ", e.getMessage()));
         }
@@ -50,7 +59,9 @@ public class ProductController {
     @GetMapping("/brand/{brand}")
     public ResponseEntity<ApiResponse> getProductsByBrand(@PathVariable String brand) {
         try {
-            return ResponseEntity.ok(new ApiResponse("Products fetched successfully", productService.getProductsByBrand(brand)));
+            List<Product> products = productService.getProductsByBrand(brand);
+            List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
+            return ResponseEntity.ok(new ApiResponse("Products fetched successfully",convertedProducts));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error fetching products by brand: ", e.getMessage()));
         }
@@ -59,7 +70,9 @@ public class ProductController {
     @GetMapping("/category/{category}/brand/{brand}")
     public ResponseEntity<ApiResponse> getProductsByCategoryAndBrand(@PathVariable String category, @PathVariable String brand) {
         try {
-            return ResponseEntity.ok(new ApiResponse("Products fetched successfully", productService.getProductsByCategoryAndBrand(category, brand)));
+            List<Product> products = productService.getProductsByCategoryAndBrand(category, brand);
+            List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
+            return ResponseEntity.ok(new ApiResponse("Products fetched successfully", convertedProducts));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error fetching products by category and brand: ", e.getMessage()));
         }
@@ -68,7 +81,9 @@ public class ProductController {
     @GetMapping("/name/{name}")
     public ResponseEntity<ApiResponse> getProductsByName(@PathVariable String name) {
         try {
-            return ResponseEntity.ok(new ApiResponse("Products fetched successfully", productService.getProductsByName(name)));
+            List<Product> products = productService.getProductsByName(name);
+            List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
+            return ResponseEntity.ok(new ApiResponse("Products fetched successfully", convertedProducts));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error fetching products by name: ", e.getMessage()));
         }
@@ -77,7 +92,9 @@ public class ProductController {
     @GetMapping("/brand/{brand}/name/{name}")
     public ResponseEntity<ApiResponse> getProductsByBrandAndName(@PathVariable String brand, @PathVariable String name) {
         try {
-            return ResponseEntity.ok(new ApiResponse("Products fetched successfully", productService.getProductsByBrandAndName(brand, name)));
+            List<Product> products = productService.getProductsByBrandAndName(brand, name);
+            List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
+            return ResponseEntity.ok(new ApiResponse("Products fetched successfully", convertedProducts));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error fetching products by brand and name: ", e.getMessage()));
         }
