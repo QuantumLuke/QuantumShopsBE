@@ -117,4 +117,14 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/count/brand/{brand}/name/{name}")
+    public ResponseEntity<ApiResponse> countProductsByBrandAndName(@PathVariable String brand, @PathVariable String name) {
+        try {
+            Long count = productService.countProductsByBrandAndName(brand, name);
+            return ResponseEntity.ok(new ApiResponse("Product count fetched successfully", count));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error counting products by brand and name: ", e.getMessage()));
+        }
+    }
+
 }
