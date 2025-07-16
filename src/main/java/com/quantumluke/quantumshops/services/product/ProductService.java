@@ -1,21 +1,45 @@
 package com.quantumluke.quantumshops.services.product;
 
 import com.quantumluke.quantumshops.exceptions.ProductNotFoundException;
+import com.quantumluke.quantumshops.models.Category;
 import com.quantumluke.quantumshops.models.Product;
+import com.quantumluke.quantumshops.repository.CategoryRepository;
 import com.quantumluke.quantumshops.repository.ProductRepository;
+import com.quantumluke.quantumshops.request.AddProductRequest;
+import com.quantumluke.quantumshops.request.UpdateProductRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService implements IProductService{
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
-    public Product addProduct(Product product) {
-        return null;
+    public Product addProduct(AddProductRequest request) {
+        Category category = Optional.ofNullable(
+                categoryRepository.findByName(request.getCategory().getName()))
+                .orElseGet(() -> {
+                   Category newCategory = new Category(request.getCategory().getName());
+                   return categoryRepository.save(newCategory);
+                });
+        request.setCategory(category);
+        return productRepository.save(createProductFromRequest(request, category));
+    }
+
+    private Product createProductFromRequest(AddProductRequest productRequest, Category category) {
+        Product product = new Product();
+        product.setName(productRequest.getName());
+        product.setBrand(productRequest.getBrand());
+        product.setPrice(productRequest.getPrice());
+        product.setInventory(productRequest.getInventory());
+        product.setDescription(productRequest.getDescription());
+        product.setCategory(category);
+        return product;
     }
 
     @Override
@@ -33,7 +57,24 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public void updateProduct(Product product, Long productId) {
+    public Product updateProduct(UpdateProductRequest request, Long productId) {
+
+        return productRepository.findById(productId)
+                .map(existingProduct -> updateExistingProductFromRequest(existingProduct, request))
+                .map(productRepository::save)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + productId));
+    }
+
+    private Product updateExistingProductFromRequest(Product existingProduct, UpdateProductRequest request){
+        existingProduct.setName(request.getName());
+        existingProduct.setBrand(request.getBrand());
+        existingProduct.setPrice(request.getPrice());
+        existingProduct.setInventory(request.getInventory());
+        existingProduct.setDescription(request.getDescription());
+
+        Category category = categoryRepository.findByName(request.getCategory().getName());
+        existingProduct.setCategory(category);
+        return existingProduct;
 
     }
 

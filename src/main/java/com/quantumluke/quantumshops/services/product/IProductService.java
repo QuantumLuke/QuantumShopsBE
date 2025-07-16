@@ -1,14 +1,16 @@
 package com.quantumluke.quantumshops.services.product;
 
 import com.quantumluke.quantumshops.models.Product;
+import com.quantumluke.quantumshops.request.AddProductRequest;
+import com.quantumluke.quantumshops.request.UpdateProductRequest;
 
 import java.util.List;
 
 public interface IProductService {
-    Product addProduct(Product product);
+    Product addProduct(AddProductRequest request);
     Product getProductById(Long id);
     void deleteProductById(Long id);
-    void updateProduct(Product product, Long productId);
+    Product updateProduct(UpdateProductRequest product, Long productId);
     List<Product> getAllProducts();
     List<Product> getProductsByCategory(String category);
     List<Product> getProductsByBrand(String brand);
