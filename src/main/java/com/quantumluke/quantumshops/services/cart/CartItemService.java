@@ -68,8 +68,8 @@ public class CartItemService implements ICartItemService{
                 }, () -> {
                     throw new CartItemNotFoundException("Cart item not found for product ID: " + productId);
                 });
-        BigDecimal totalAmount = cart.getTotalAmount();
-        cart.setTotalAmount(totalAmount);
+        BigDecimal totalPrice = cart.getTotalPrice();
+        cart.setTotalPrice(totalPrice);
         cartRepository.save(cart);
 
     }
