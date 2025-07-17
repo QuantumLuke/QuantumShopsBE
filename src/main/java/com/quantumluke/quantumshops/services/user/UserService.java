@@ -1,5 +1,6 @@
 package com.quantumluke.quantumshops.services.user;
 
+import com.quantumluke.quantumshops.dto.UserDto;
 import com.quantumluke.quantumshops.exceptions.AlreadyExistsException;
 import com.quantumluke.quantumshops.exceptions.ResourceNotFoundException;
 import com.quantumluke.quantumshops.models.User;
@@ -7,6 +8,7 @@ import com.quantumluke.quantumshops.repository.UserRepository;
 import com.quantumluke.quantumshops.request.CreateUserRequest;
 import com.quantumluke.quantumshops.request.UpdateUserRequest;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,6 +17,7 @@ import java.util.Optional;
 @Service
 public class UserService implements IUserService{
     private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public User getUserById(Long userId) {
@@ -51,5 +54,10 @@ public class UserService implements IUserService{
                 userRepository::delete,
                 () -> { throw new ResourceNotFoundException("User not found with id: " + userId);}
         );
+    }
+
+    @Override
+    public UserDto convertUserToDto(User user) {
+        return modelMapper.map(user, UserDto.class);
     }
 }

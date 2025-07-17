@@ -1,5 +1,6 @@
 package com.quantumluke.quantumshops.controllers;
 
+import com.quantumluke.quantumshops.dto.UserDto;
 import com.quantumluke.quantumshops.exceptions.AlreadyExistsException;
 import com.quantumluke.quantumshops.exceptions.ResourceNotFoundException;
 import com.quantumluke.quantumshops.models.User;
@@ -34,7 +35,8 @@ public class UserController {
     public ResponseEntity<ApiResponse> createUser(@RequestBody CreateUserRequest request) {
         try {
             User user = userService.createUser(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("User created successfully", user));
+            UserDto userDto = userService.convertUserToDto(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("User created successfully", userDto));
         } catch (AlreadyExistsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
@@ -46,7 +48,9 @@ public class UserController {
     public ResponseEntity<ApiResponse> updateUser(@PathVariable Long userId, @RequestBody UpdateUserRequest request) {
         try {
             User user = userService.updateUser(userId, request);
-            return ResponseEntity.ok(new ApiResponse("User updated successfully", user));
+            UserDto userDto = userService.convertUserToDto(user);
+
+            return ResponseEntity.ok(new ApiResponse("User updated successfully", userDto));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
