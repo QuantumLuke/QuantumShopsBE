@@ -1,6 +1,7 @@
 package com.quantumluke.quantumshops.services.cart;
 
 import com.quantumluke.quantumshops.models.Cart;
+import com.quantumluke.quantumshops.models.User;
 
 import java.math.BigDecimal;
 
@@ -10,6 +11,6 @@ public interface ICartService {
     void clearCart(Long id);
     BigDecimal getTotalPrice(Long id);
 
-    Long initializeCart();
+    Cart initializeCart(User user);
 
 }

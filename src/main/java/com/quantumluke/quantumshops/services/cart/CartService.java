@@ -2,6 +2,7 @@ package com.quantumluke.quantumshops.services.cart;
 
 import com.quantumluke.quantumshops.exceptions.ResourceNotFoundException;
 import com.quantumluke.quantumshops.models.Cart;
+import com.quantumluke.quantumshops.models.User;
 import com.quantumluke.quantumshops.repository.CartItemRepository;
 import com.quantumluke.quantumshops.repository.CartRepository;
 import jakarta.transaction.Transactional;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -47,10 +49,13 @@ public class CartService implements ICartService{
     }
 
     @Override
-    public Long initializeCart() {
-        //TODO - Remove when User Authentication is implemented
-        Cart newCart = new Cart();
-        return cartRepository.save(newCart).getId();
+    public Cart initializeCart(User user) {
+        return Optional.ofNullable(getCartByUserId(user.getId()))
+                .orElseGet(() -> {
+                    Cart cart = new Cart();
+                    cart.setUser(user);
+                    return cartRepository.save(cart);
+                });
     }
 
 }
