@@ -1,7 +1,7 @@
 package com.quantumluke.quantumshops.services.category;
 
 import com.quantumluke.quantumshops.exceptions.AlreadyExistsException;
-import com.quantumluke.quantumshops.exceptions.CategoryNotFoundException;
+import com.quantumluke.quantumshops.exceptions.ResourceNotFoundException;
 import com.quantumluke.quantumshops.models.Category;
 import com.quantumluke.quantumshops.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class CategoryService implements ICategoryService{
     @Override
     public Category getCategoryById(Long id) {
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException("Category not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
     }
 
     @Override
@@ -50,7 +50,7 @@ public class CategoryService implements ICategoryService{
                     existingCategory.setName(category.getName());
                     return categoryRepository.save(existingCategory);
                 })
-                .orElseThrow(() -> new CategoryNotFoundException("Category not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class CategoryService implements ICategoryService{
         categoryRepository.findById(id)
                 .ifPresentOrElse(
                         categoryRepository::delete,
-                        () -> { throw new CategoryNotFoundException("Category not found with id: " + id); }
+                        () -> { throw new ResourceNotFoundException("Category not found with id: " + id); }
                 );
     }
 }

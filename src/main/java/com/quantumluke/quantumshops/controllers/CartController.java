@@ -1,6 +1,6 @@
 package com.quantumluke.quantumshops.controllers;
 
-import com.quantumluke.quantumshops.exceptions.CartNotFoundException;
+import com.quantumluke.quantumshops.exceptions.ResourceNotFoundException;
 import com.quantumluke.quantumshops.models.Cart;
 import com.quantumluke.quantumshops.response.ApiResponse;
 import com.quantumluke.quantumshops.services.cart.ICartService;
@@ -22,7 +22,7 @@ public class CartController {
         try {
             Cart cart = cartService.getCartById(cartId);
             return ResponseEntity.ok(new ApiResponse(("Cart fetched successfully"), cart));
-        } catch (CartNotFoundException e){
+        } catch (ResourceNotFoundException e){
           return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error fetching cart: ", e.getMessage()));
@@ -35,7 +35,7 @@ public class CartController {
         try {
             cartService.clearCart(cartId);
             return ResponseEntity.ok(new ApiResponse("Cart cleared successfully", null));
-        } catch (CartNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error clearing cart: ", e.getMessage()));
@@ -47,7 +47,7 @@ public class CartController {
         try {
             BigDecimal totalPrice = cartService.getTotalPrice(cartId);
             return ResponseEntity.ok(new ApiResponse("Total price fetched successfully", totalPrice));
-        } catch (CartNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error fetching total price: ", e.getMessage()));

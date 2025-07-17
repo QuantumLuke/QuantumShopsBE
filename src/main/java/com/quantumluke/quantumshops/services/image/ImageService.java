@@ -1,7 +1,7 @@
 package com.quantumluke.quantumshops.services.image;
 
 import com.quantumluke.quantumshops.dto.ImageDto;
-import com.quantumluke.quantumshops.exceptions.ImageNotFoundException;
+import com.quantumluke.quantumshops.exceptions.ResourceNotFoundException;
 import com.quantumluke.quantumshops.models.Image;
 import com.quantumluke.quantumshops.models.Product;
 import com.quantumluke.quantumshops.repository.ImageRepository;
@@ -25,14 +25,14 @@ public class ImageService implements IImageService{
     @Override
     public Image getImageById(Long id) {
         return imageRepository.findById(id)
-                .orElseThrow(() -> new ImageNotFoundException("Image not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Image not found with id: " + id));
     }
 
     @Override
     public void deleteImageById(Long id) {
         imageRepository.findById(id).ifPresentOrElse(
                 imageRepository::delete,
-                () -> { throw new ImageNotFoundException("Image not found with id: " + id); }
+                () -> { throw new ResourceNotFoundException("Image not found with id: " + id); }
         );
     }
 

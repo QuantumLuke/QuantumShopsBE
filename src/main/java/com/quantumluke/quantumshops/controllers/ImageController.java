@@ -1,7 +1,7 @@
 package com.quantumluke.quantumshops.controllers;
 
 import com.quantumluke.quantumshops.dto.ImageDto;
-import com.quantumluke.quantumshops.exceptions.ImageNotFoundException;
+import com.quantumluke.quantumshops.exceptions.ResourceNotFoundException;
 import com.quantumluke.quantumshops.models.Image;
 import com.quantumluke.quantumshops.response.ApiResponse;
 import com.quantumluke.quantumshops.services.image.IImageService;
@@ -52,7 +52,7 @@ public class ImageController {
             Image updatedImage = imageService.updateImage(file, imageId);
             return ResponseEntity.ok(new ApiResponse("Image updated successfully", updatedImage));
 
-        } catch (ImageNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -66,7 +66,7 @@ public class ImageController {
         try {
             imageService.deleteImageById(imageId);
             return ResponseEntity.ok(new ApiResponse("Image deleted successfully", null));
-        } catch (ImageNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

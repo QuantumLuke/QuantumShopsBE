@@ -1,7 +1,7 @@
 package com.quantumluke.quantumshops.controllers;
 
 import com.quantumluke.quantumshops.exceptions.AlreadyExistsException;
-import com.quantumluke.quantumshops.exceptions.CategoryNotFoundException;
+import com.quantumluke.quantumshops.exceptions.ResourceNotFoundException;
 import com.quantumluke.quantumshops.models.Category;
 import com.quantumluke.quantumshops.response.ApiResponse;
 import com.quantumluke.quantumshops.services.category.ICategoryService;
@@ -29,7 +29,7 @@ public class CategoryController {
     public ResponseEntity<ApiResponse> getCategoryById(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(new ApiResponse("Category fetched successfully", categoryService.getCategoryById(id)));
-        } catch (CategoryNotFoundException e){
+        } catch (ResourceNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error fetching category: ", e.getMessage()));
@@ -40,7 +40,7 @@ public class CategoryController {
     public ResponseEntity<ApiResponse> getCategoryByName(@PathVariable String name) {
         try {
             return ResponseEntity.ok(new ApiResponse("Category fetched successfully", categoryService.getCategoryByName(name)));
-        } catch (CategoryNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error fetching category: ", e.getMessage()));
@@ -63,7 +63,7 @@ public class CategoryController {
         try {
             categoryService.deleteCategory(id);
             return ResponseEntity.ok(new ApiResponse("Category deleted successfully", null));
-        } catch (CategoryNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error deleting category: ", e.getMessage()));
@@ -74,7 +74,7 @@ public class CategoryController {
     public ResponseEntity<ApiResponse> updateCategory(@PathVariable Long id, @RequestBody Category updatedCategory) {
         try {
             return ResponseEntity.ok(new ApiResponse("Category updated successfully", categoryService.updateCategory(updatedCategory, id)));
-        } catch (CategoryNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error updating category: ", e.getMessage()));

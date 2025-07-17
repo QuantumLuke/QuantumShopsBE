@@ -1,6 +1,6 @@
 package com.quantumluke.quantumshops.services.cart;
 
-import com.quantumluke.quantumshops.exceptions.CartItemNotFoundException;
+import com.quantumluke.quantumshops.exceptions.ResourceNotFoundException;
 import com.quantumluke.quantumshops.models.Cart;
 import com.quantumluke.quantumshops.models.CartItem;
 import com.quantumluke.quantumshops.models.Product;
@@ -66,7 +66,7 @@ public class CartItemService implements ICartItemService{
                     cartItem.setUnitPrice(cartItem.getProduct().getPrice());
                     cartItem.setTotalPrice();
                 }, () -> {
-                    throw new CartItemNotFoundException("Cart item not found for product ID: " + productId);
+                    throw new ResourceNotFoundException("Cart item not found for product ID: " + productId);
                 });
         BigDecimal totalPrice = cart.getTotalPrice();
         cart.setTotalPrice(totalPrice);
@@ -80,6 +80,6 @@ public class CartItemService implements ICartItemService{
                 .stream()
                 .filter(item -> item.getProduct().getId().equals(productId))
                 .findFirst()
-                .orElseThrow(() -> new CartItemNotFoundException("Cart item not found for product ID: " + productId));
+                .orElseThrow(() -> new ResourceNotFoundException("Cart item not found for product ID: " + productId));
     }
 }

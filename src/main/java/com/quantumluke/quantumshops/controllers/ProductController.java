@@ -1,13 +1,12 @@
 package com.quantumluke.quantumshops.controllers;
 
 import com.quantumluke.quantumshops.dto.ProductDto;
-import com.quantumluke.quantumshops.exceptions.ProductNotFoundException;
+import com.quantumluke.quantumshops.exceptions.ResourceNotFoundException;
 import com.quantumluke.quantumshops.models.Product;
 import com.quantumluke.quantumshops.request.AddProductRequest;
 import com.quantumluke.quantumshops.request.UpdateProductRequest;
 import com.quantumluke.quantumshops.response.ApiResponse;
 import com.quantumluke.quantumshops.services.product.IProductService;
-import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +37,7 @@ public class ProductController {
             Product product = productService.getProductById(id);
             ProductDto convertedProduct = productService.convertToDto(product);
             return ResponseEntity.ok(new ApiResponse("Product fetched successfully", convertedProduct));
-        } catch (ProductNotFoundException e){
+        } catch (ResourceNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error fetching product: ", e.getMessage()));
@@ -115,7 +114,7 @@ public class ProductController {
     public ResponseEntity<ApiResponse> updateProduct(@PathVariable Long id, @RequestBody UpdateProductRequest productDetails) {
         try {
             return ResponseEntity.ok(new ApiResponse("Product updated successfully", productService.updateProduct(productDetails, id)));
-        } catch (ProductNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error updating product: ", e.getMessage()));
@@ -127,7 +126,7 @@ public class ProductController {
         try {
             productService.deleteProductById(id);
             return ResponseEntity.ok(new ApiResponse("Product deleted successfully", null));
-        } catch (ProductNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error deleting product: ", e.getMessage()));

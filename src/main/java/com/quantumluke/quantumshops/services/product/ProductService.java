@@ -2,7 +2,7 @@ package com.quantumluke.quantumshops.services.product;
 
 import com.quantumluke.quantumshops.dto.ImageDto;
 import com.quantumluke.quantumshops.dto.ProductDto;
-import com.quantumluke.quantumshops.exceptions.ProductNotFoundException;
+import com.quantumluke.quantumshops.exceptions.ResourceNotFoundException;
 import com.quantumluke.quantumshops.models.Category;
 import com.quantumluke.quantumshops.models.Image;
 import com.quantumluke.quantumshops.models.Product;
@@ -52,7 +52,7 @@ public class ProductService implements IProductService{
     @Override
     public Product getProductById(Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
     }
 
     @Override
@@ -60,7 +60,7 @@ public class ProductService implements IProductService{
         productRepository.findById(id)
                 .ifPresentOrElse(
                         productRepository::delete,
-                        () -> { throw new ProductNotFoundException("Product not found with id: " + id); }
+                        () -> { throw new ResourceNotFoundException("Product not found with id: " + id); }
                 );
     }
 
@@ -70,7 +70,7 @@ public class ProductService implements IProductService{
         return productRepository.findById(productId)
                 .map(existingProduct -> updateExistingProductFromRequest(existingProduct, request))
                 .map(productRepository::save)
-                .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + productId));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + productId));
     }
 
     private Product updateExistingProductFromRequest(Product existingProduct, UpdateProductRequest request){

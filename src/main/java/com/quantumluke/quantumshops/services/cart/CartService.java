@@ -1,6 +1,6 @@
 package com.quantumluke.quantumshops.services.cart;
 
-import com.quantumluke.quantumshops.exceptions.CartNotFoundException;
+import com.quantumluke.quantumshops.exceptions.ResourceNotFoundException;
 import com.quantumluke.quantumshops.models.Cart;
 import com.quantumluke.quantumshops.repository.CartItemRepository;
 import com.quantumluke.quantumshops.repository.CartRepository;
@@ -18,7 +18,7 @@ public class CartService implements ICartService{
     @Override
     public Cart getCartById(Long id) {
         Cart cart = cartRepository.findById(id)
-                .orElseThrow(() -> new CartNotFoundException("Cart not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Cart not found with id: " + id));
         BigDecimal totalPrice = cart.getTotalPrice();
         cart.setTotalPrice(totalPrice);
         return cartRepository.save(cart);
