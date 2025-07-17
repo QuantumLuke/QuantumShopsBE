@@ -38,4 +38,12 @@ public class CartService implements ICartService{
         Cart cart = getCartById(id);
         return cart.getTotalPrice();
     }
+
+    @Override
+    public Long initializeCart() {
+        //TODO - Remove when User Authentication is implemented
+        Cart newCart = new Cart();
+        return cartRepository.save(newCart).getId();
+    }
+
 }

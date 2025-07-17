@@ -3,6 +3,7 @@ package com.quantumluke.quantumshops.controllers;
 import com.quantumluke.quantumshops.exceptions.ResourceNotFoundException;
 import com.quantumluke.quantumshops.response.ApiResponse;
 import com.quantumluke.quantumshops.services.cart.ICartItemService;
+import com.quantumluke.quantumshops.services.cart.ICartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +15,16 @@ import org.springframework.web.bind.annotation.*;
 public class CartItemController {
 
     private final ICartItemService cartItemService;
+    private final ICartService cartService;
 
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse> addItemToCart(@RequestParam Long cartId, @RequestParam Long itemId, @RequestParam int quantity) {
+    public ResponseEntity<ApiResponse> addItemToCart(@RequestParam(required = false) Long cartId, @RequestParam Long itemId, @RequestParam int quantity) {
         try {
+
+            if (cartId == null){
+                cartId = cartService.initializeCart();
+            }
+
             cartItemService.addItemToCart(cartId, itemId, quantity);
             return ResponseEntity.ok(new ApiResponse("Item added successfully", null));
         } catch (ResourceNotFoundException e) {
