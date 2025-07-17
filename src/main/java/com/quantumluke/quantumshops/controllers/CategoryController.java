@@ -30,7 +30,7 @@ public class CategoryController {
         try {
             return ResponseEntity.ok(new ApiResponse("Category fetched successfully", categoryService.getCategoryById(id)));
         } catch (CategoryNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Category not found with id: " + id, e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error fetching category: ", e.getMessage()));
         }
@@ -41,7 +41,7 @@ public class CategoryController {
         try {
             return ResponseEntity.ok(new ApiResponse("Category fetched successfully", categoryService.getCategoryByName(name)));
         } catch (CategoryNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Category not found with name: " + name, e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error fetching category: ", e.getMessage()));
         }
@@ -52,7 +52,7 @@ public class CategoryController {
         try {
             return ResponseEntity.ok(new ApiResponse("Category added successfully", categoryService.addCategory(newCategory)));
         } catch (AlreadyExistsException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse("Category already exists: ", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error adding category: ", e.getMessage()));
         }
@@ -64,7 +64,7 @@ public class CategoryController {
             categoryService.deleteCategory(id);
             return ResponseEntity.ok(new ApiResponse("Category deleted successfully", null));
         } catch (CategoryNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Category not found with id: " + id, e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error deleting category: ", e.getMessage()));
         }
@@ -75,7 +75,7 @@ public class CategoryController {
         try {
             return ResponseEntity.ok(new ApiResponse("Category updated successfully", categoryService.updateCategory(updatedCategory, id)));
         } catch (CategoryNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Category not found with id: " + id, e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error updating category: ", e.getMessage()));
         }

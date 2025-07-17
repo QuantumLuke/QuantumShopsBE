@@ -53,7 +53,7 @@ public class ImageController {
             return ResponseEntity.ok(new ApiResponse("Image updated successfully", updatedImage));
 
         } catch (ImageNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Image not found: ", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ApiResponse("Failed to update image: ", e.getMessage()));
@@ -67,7 +67,7 @@ public class ImageController {
             imageService.deleteImageById(imageId);
             return ResponseEntity.ok(new ApiResponse("Image deleted successfully", null));
         } catch (ImageNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Image not found: ", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ApiResponse("Failed to delete image: ", e.getMessage()));

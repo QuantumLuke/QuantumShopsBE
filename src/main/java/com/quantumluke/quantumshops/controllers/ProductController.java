@@ -39,7 +39,7 @@ public class ProductController {
             ProductDto convertedProduct = productService.convertToDto(product);
             return ResponseEntity.ok(new ApiResponse("Product fetched successfully", convertedProduct));
         } catch (ProductNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Product not found with id: " + id, e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error fetching product: ", e.getMessage()));
         }
@@ -116,7 +116,7 @@ public class ProductController {
         try {
             return ResponseEntity.ok(new ApiResponse("Product updated successfully", productService.updateProduct(productDetails, id)));
         } catch (ProductNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Product not found with id: " + id, e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error updating product: ", e.getMessage()));
         }
@@ -128,7 +128,7 @@ public class ProductController {
             productService.deleteProductById(id);
             return ResponseEntity.ok(new ApiResponse("Product deleted successfully", null));
         } catch (ProductNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Product not found with id: " + id, e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error deleting product: ", e.getMessage()));
         }
