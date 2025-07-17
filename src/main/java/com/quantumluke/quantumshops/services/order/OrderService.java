@@ -8,11 +8,13 @@ import com.quantumluke.quantumshops.models.OrderItem;
 import com.quantumluke.quantumshops.models.Product;
 import com.quantumluke.quantumshops.repository.OrderRepository;
 import com.quantumluke.quantumshops.repository.ProductRepository;
+import com.quantumluke.quantumshops.services.cart.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -20,16 +22,27 @@ import java.util.List;
 public class OrderService implements IOrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
+    private final CartService cartService;
 
     @Override
     public Order createOrder(Long userId) {
-        //TODO : Implement once user management is implemented
-        return null;
+        Cart cart = cartService.getCartByUserId(userId);
+
+        Order order = createOrder(cart);
+        List<OrderItem> orderItemList = createOrderItems(order, cart);
+
+        order.setOrderItems(new HashSet<>(orderItemList));
+        order.setOrderTotalPrice(calculateTotalPrice(orderItemList));
+        Order savedOrder = orderRepository.save(order);
+
+        cartService.clearCart(cart.getId());
+
+        return savedOrder;
     }
 
     private Order createOrder(Cart cart){
         Order order = new Order();
-        //TODO: Set user once user management is implemented
+        order.setUser(cart.getUser());
         order.setOrderStatus(OrderStatus.PENDING);
         order.setOrderDate(LocalDate.now());
         return order;
@@ -65,5 +78,10 @@ public class OrderService implements IOrderService {
     public Order getOrderById(Long orderId) {
         return orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + orderId));
+    }
+
+    @Override
+    public List<Order> getOrdersByUserId(Long userId) {
+        return orderRepository.findByUserId(userId);
     }
 }
