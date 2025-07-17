@@ -19,7 +19,6 @@ public class OrderItem {
     private int quantity;
     private BigDecimal pricePerUnit;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;

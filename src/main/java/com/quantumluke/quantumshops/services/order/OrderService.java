@@ -1,7 +1,6 @@
 package com.quantumluke.quantumshops.services.order;
 
 import com.quantumluke.quantumshops.dto.OrderDto;
-import com.quantumluke.quantumshops.dto.OrderItemDto;
 import com.quantumluke.quantumshops.enums.OrderStatus;
 import com.quantumluke.quantumshops.exceptions.ResourceNotFoundException;
 import com.quantumluke.quantumshops.models.Cart;
@@ -95,7 +94,8 @@ public class OrderService implements IOrderService {
                 .toList();
     }
 
-    private OrderDto convertToDto(Order order) {
+    @Override
+    public OrderDto convertToDto(Order order) {
         return modelMapper.map(order, OrderDto.class);
     }
 }
