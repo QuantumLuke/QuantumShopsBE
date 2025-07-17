@@ -1,6 +1,7 @@
 package com.quantumluke.quantumshops.controllers;
 
 import com.quantumluke.quantumshops.dto.ProductDto;
+import com.quantumluke.quantumshops.exceptions.AlreadyExistsException;
 import com.quantumluke.quantumshops.exceptions.ResourceNotFoundException;
 import com.quantumluke.quantumshops.models.Product;
 import com.quantumluke.quantumshops.request.AddProductRequest;
@@ -105,6 +106,8 @@ public class ProductController {
     public ResponseEntity<ApiResponse> addProduct(@RequestBody AddProductRequest product) {
         try {
             return ResponseEntity.ok(new ApiResponse("Product added successfully", productService.addProduct(product)));
+        }catch (AlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error adding product: ", e.getMessage()));
         }

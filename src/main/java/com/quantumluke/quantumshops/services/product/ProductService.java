@@ -2,6 +2,7 @@ package com.quantumluke.quantumshops.services.product;
 
 import com.quantumluke.quantumshops.dto.ImageDto;
 import com.quantumluke.quantumshops.dto.ProductDto;
+import com.quantumluke.quantumshops.exceptions.AlreadyExistsException;
 import com.quantumluke.quantumshops.exceptions.ResourceNotFoundException;
 import com.quantumluke.quantumshops.models.Category;
 import com.quantumluke.quantumshops.models.Image;
@@ -28,6 +29,10 @@ public class ProductService implements IProductService{
 
     @Override
     public Product addProduct(AddProductRequest request) {
+
+        if (productExists(request.getName(), request.getBrand())) {
+            throw new AlreadyExistsException("Product " + request.getBrand() + " " + request.getName() + " already exists");
+        }
         Category category = Optional.ofNullable(
                 categoryRepository.findByName(request.getCategory().getName()))
                 .orElseGet(() -> {
@@ -36,6 +41,10 @@ public class ProductService implements IProductService{
                 });
         request.setCategory(category);
         return productRepository.save(createProductFromRequest(request, category));
+    }
+
+    private boolean productExists(String name, String brand){
+        return productRepository.existsByNameAndBrand(name, brand);
     }
 
     private Product createProductFromRequest(AddProductRequest productRequest, Category category) {
