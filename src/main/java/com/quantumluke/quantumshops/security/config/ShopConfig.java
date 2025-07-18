@@ -1,4 +1,4 @@
-package com.quantumluke.quantumshops.config;
+package com.quantumluke.quantumshops.security.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
