@@ -7,6 +7,7 @@ import com.quantumluke.quantumshops.response.ApiResponse;
 import com.quantumluke.quantumshops.services.cart.ICartItemService;
 import com.quantumluke.quantumshops.services.cart.ICartService;
 import com.quantumluke.quantumshops.services.user.UserService;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +25,7 @@ public class CartItemController {
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> addItemToCart(@RequestParam Long itemId, @RequestParam int quantity) {
         try {
-            //TODO change after implementing user authentication
-            User user = userService.getUserById(4L);
+            User user = userService.getAuthentivatedUser();
             Cart cart = cartService.initializeCart(user);
 
 
@@ -33,6 +33,8 @@ public class CartItemController {
             return ResponseEntity.ok(new ApiResponse("Item added successfully", null));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+        } catch (JwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error adding item to cart: " + e.getMessage(), null));
         }
