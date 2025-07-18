@@ -1,6 +1,5 @@
 package com.quantumluke.quantumshops.security.config;
 
-import ch.qos.logback.core.util.COWArrayList;
 import com.quantumluke.quantumshops.security.jwt.AuthTokenFilter;
 import com.quantumluke.quantumshops.security.jwt.JwtAuthEntryPoint;
 import com.quantumluke.quantumshops.security.user.ShopUserDetailsService;
@@ -11,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;

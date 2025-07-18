@@ -3,7 +3,6 @@ package com.quantumluke.quantumshops.security.user;
 import com.quantumluke.quantumshops.models.User;
 import com.quantumluke.quantumshops.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -1,6 +1,7 @@
 package com.quantumluke.quantumshops.dto;
 
 import lombok.Data;
+
 import java.math.BigDecimal;
 
 /**
