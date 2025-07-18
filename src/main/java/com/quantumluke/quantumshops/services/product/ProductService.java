@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +42,11 @@ public class ProductService implements IProductService{
                 });
         request.setCategory(category);
         return productRepository.save(createProductFromRequest(request, category));
+    }
+
+    @Override
+    public List<Product> addProducts(List<AddProductRequest> requests) {
+        return requests.stream().map(this::addProduct).collect(Collectors.toList());
     }
 
     private boolean productExists(String name, String brand){

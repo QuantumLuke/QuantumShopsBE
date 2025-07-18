@@ -113,6 +113,17 @@ public class ProductController {
         }
     }
 
+    @PostMapping("/multiple-add")
+    public ResponseEntity<ApiResponse> addProducts(@RequestBody List<AddProductRequest> products) {
+        try {
+            return ResponseEntity.ok(new ApiResponse("Products added successfully", productService.addProducts(products)));
+        }catch (AlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(e.getMessage(), null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error adding product: ", e.getMessage()));
+        }
+    }
+
     @PutMapping("{id}/update")
     public ResponseEntity<ApiResponse> updateProduct(@PathVariable Long id, @RequestBody UpdateProductRequest productDetails) {
         try {
