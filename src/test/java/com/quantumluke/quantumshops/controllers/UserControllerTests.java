@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
 class UserControllerTests {
-
     private IUserService userService;
     private UserController userController;
 
@@ -26,94 +25,125 @@ class UserControllerTests {
         userController = new UserController(userService);
     }
 
-    @DisplayName("Get user by ID returns user successfully")
+    @DisplayName("Should return user when found by ID")
     @Test
-    void getUserByIdReturnsUserSuccessfully() {
+    void getUserById_ExistingUser_ReturnsUser() {
+        // Arrange
         Long userId = 1L;
-        User mockUser = new User();
-        UserDto mockUserDto = new UserDto();
-        when(userService.getUserById(userId)).thenReturn(mockUser);
-        when(userService.convertUserToDto(mockUser)).thenReturn(mockUserDto);
+        User user = new User();
+        UserDto userDto = new UserDto();
+        String expectedMessage = "User retrieved successfully";
 
+        when(userService.getUserById(userId)).thenReturn(user);
+        when(userService.convertUserToDto(user)).thenReturn(userDto);
+
+        // Act
         ResponseEntity<ApiResponse> response = userController.getUserById(userId);
 
+        // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals("User retrieved successfully", response.getBody().getMessage());
-        assertEquals(mockUserDto, response.getBody().getData());
+        ApiResponse body = response.getBody();
+        assertNotNull(body);
+        assertEquals(expectedMessage, body.getMessage());
+        assertEquals(userDto, body.getData());
     }
 
-    @DisplayName("Get user by ID returns not found when user does not exist")
+    @DisplayName("Should return not found when user does not exist")
     @Test
-    void getUserByIdReturnsNotFoundWhenUserDoesNotExist() {
+    void getUserById_NonExistingUser_ReturnsNotFound() {
+        // Arrange
         Long userId = 1L;
-        when(userService.getUserById(userId)).thenThrow(new ResourceNotFoundException("User not found"));
+        String expectedMessage = "User not found";
+        when(userService.getUserById(userId)).thenThrow(new ResourceNotFoundException(expectedMessage));
 
+        // Act
         ResponseEntity<ApiResponse> response = userController.getUserById(userId);
 
+        // Assert
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals("User not found", response.getBody().getMessage());
-        assertNull(response.getBody().getData());
+        ApiResponse body = response.getBody();
+        assertNotNull(body);
+        assertEquals(expectedMessage, body.getMessage());
+        assertNull(body.getData());
     }
 
-    @DisplayName("Create user returns conflict when user already exists")
+    @DisplayName("Should return conflict when creating user that already exists")
     @Test
-    void createUserReturnsConflictWhenUserAlreadyExists() {
+    void createUser_ExistingEmail_ReturnsConflict() {
+        // Arrange
         CreateUserRequest request = new CreateUserRequest();
-        when(userService.createUser(request)).thenThrow(new AlreadyExistsException("User already exists"));
+        String expectedMessage = "User already exists";
+        when(userService.createUser(request)).thenThrow(new AlreadyExistsException(expectedMessage));
 
+        // Act
         ResponseEntity<ApiResponse> response = userController.createUser(request);
 
+        // Assert
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals("User already exists", response.getBody().getMessage());
-        assertNull(response.getBody().getData());
+        ApiResponse body = response.getBody();
+        assertNotNull(body);
+        assertEquals(expectedMessage, body.getMessage());
+        assertNull(body.getData());
     }
 
-    @DisplayName("Create user return successful")
+    @DisplayName("Should return created when user is created successfully")
     @Test
-    void createUserReturnsSuccessful() {
+    void createUser_NewUser_ReturnsCreatedUser() {
+        // Arrange
         CreateUserRequest request = new CreateUserRequest();
-        User mockUser = new User();
-        UserDto mockUserDto = new UserDto();
-        when(userService.createUser(request)).thenReturn(mockUser);
-        when(userService.convertUserToDto(mockUser)).thenReturn(mockUserDto);
+        User user = new User();
+        UserDto userDto = new UserDto();
+        String expectedMessage = "User created successfully";
+        when(userService.createUser(request)).thenReturn(user);
+        when(userService.convertUserToDto(user)).thenReturn(userDto);
 
+        // Act
         ResponseEntity<ApiResponse> response = userController.createUser(request);
 
+        // Assert
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals("User created successfully", response.getBody().getMessage());
-        assertEquals(mockUserDto, response.getBody().getData());
+        ApiResponse body = response.getBody();
+        assertNotNull(body);
+        assertEquals(expectedMessage, body.getMessage());
+        assertEquals(userDto, body.getData());
     }
 
-    @DisplayName("Update user returns not found when user does not exist")
+    @DisplayName("Should return not found when updating non-existent user")
     @Test
-    void updateUserReturnsNotFoundWhenUserDoesNotExist() {
+    void updateUser_NonExistingUser_ReturnsNotFound() {
+        // Arrange
         Long userId = 1L;
         UpdateUserRequest request = new UpdateUserRequest();
-        when(userService.updateUser(userId, request)).thenThrow(new ResourceNotFoundException("User not found"));
+        String expectedMessage = "User not found";
+        when(userService.updateUser(userId, request)).thenThrow(new ResourceNotFoundException(expectedMessage));
 
+        // Act
         ResponseEntity<ApiResponse> response = userController.updateUser(userId, request);
 
+        // Assert
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals("User not found", response.getBody().getMessage());
-        assertNull(response.getBody().getData());
+        ApiResponse body = response.getBody();
+        assertNotNull(body);
+        assertEquals(expectedMessage, body.getMessage());
+        assertNull(body.getData());
     }
 
-    @DisplayName("Delete user returns not found when user does not exist")
+    @DisplayName("Should return not found when deleting non-existent user")
     @Test
-    void deleteUserReturnsNotFoundWhenUserDoesNotExist() {
+    void deleteUser_NonExistingUser_ReturnsNotFound() {
+        // Arrange
         Long userId = 1L;
-        doThrow(new ResourceNotFoundException("User not found")).when(userService).deleteUser(userId);
+        String expectedMessage = "User not found";
+        doThrow(new ResourceNotFoundException(expectedMessage)).when(userService).deleteUser(userId);
 
+        // Act
         ResponseEntity<ApiResponse> response = userController.deleteUser(userId);
 
+        // Assert
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals("User not found", response.getBody().getMessage());
-        assertNull(response.getBody().getData());
+        ApiResponse body = response.getBody();
+        assertNotNull(body);
+        assertEquals(expectedMessage, body.getMessage());
+        assertNull(body.getData());
     }
 }
