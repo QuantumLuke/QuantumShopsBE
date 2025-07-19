@@ -8,6 +8,7 @@ import com.quantumluke.quantumshops.request.CreateUserRequest;
 import com.quantumluke.quantumshops.request.UpdateUserRequest;
 import com.quantumluke.quantumshops.response.ApiResponse;
 import com.quantumluke.quantumshops.services.user.IUserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse> createUser(@RequestBody CreateUserRequest request) {
+    public ResponseEntity<ApiResponse> createUser(@Valid @RequestBody CreateUserRequest request) {
         try {
             User user = userService.createUser(request);
             UserDto userDto = userService.convertUserToDto(user);
@@ -46,7 +47,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/update")
-    public ResponseEntity<ApiResponse> updateUser(@PathVariable Long userId, @RequestBody UpdateUserRequest request) {
+    public ResponseEntity<ApiResponse> updateUser(@PathVariable Long userId, @Valid @RequestBody UpdateUserRequest request) {
         try {
             User user = userService.updateUser(userId, request);
             UserDto userDto = userService.convertUserToDto(user);
