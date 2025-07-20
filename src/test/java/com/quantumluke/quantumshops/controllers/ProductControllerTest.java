@@ -177,15 +177,16 @@ class ProductControllerTests {
     @DisplayName("Should return success")
     @Test
     void addProduct_ReturnsSuccess() {
+        Product newProduct = new Product();
         AddProductRequest request = new AddProductRequest();
-        when(productService.addProduct(request));
+        when(productService.addProduct(request)).thenReturn(newProduct);
         ResponseEntity<ApiResponse> response = productController.addProduct(request);
 
         assertNotNull(response.getBody());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Product added successfully", response.getBody().getMessage());
-        assertNull(response.getBody().getData());
+        assertEquals(newProduct, response.getBody().getData());
     }
 
     @DisplayName("Should return success")
