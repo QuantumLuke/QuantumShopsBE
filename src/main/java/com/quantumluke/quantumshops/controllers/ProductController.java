@@ -131,7 +131,7 @@ public class ProductController {
     @PutMapping("{id}/update")
     public ResponseEntity<ApiResponse> updateProduct(@PathVariable Long id, @RequestBody UpdateProductRequest productDetails) {
         try {
-            return ResponseEntity.ok(new ApiResponse("Product updated successfully", productService.updateProduct(productDetails, id)));
+            return ResponseEntity.ok(new ApiResponse("Product updated successfully", productService.updateProduct(id, productDetails)));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         } catch (Exception e) {

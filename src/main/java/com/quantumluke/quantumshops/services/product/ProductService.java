@@ -80,7 +80,7 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public Product updateProduct(UpdateProductRequest request, Long productId) {
+    public Product updateProduct(Long productId, UpdateProductRequest request) {
 
         return productRepository.findById(productId)
                 .map(existingProduct -> updateExistingProductFromRequest(existingProduct, request))
